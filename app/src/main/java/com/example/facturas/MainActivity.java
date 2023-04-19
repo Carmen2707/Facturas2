@@ -27,19 +27,22 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.material.slider.Slider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Facturas> listaFacturas;
     private RequestQueue rq;
     private RecyclerView rv1;
     private AdaptadorFacturas adaptadorFacturas;
-private MainActivity instance=this;
+    private MainActivity instance=this;
+    public static Double maxImporte = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,12 @@ private MainActivity instance=this;
         adaptadorFacturas = new AdaptadorFacturas();
         rv1.setAdapter(adaptadorFacturas);
 
+
+
+
+
+
+        //boton filtros
         MenuHost menu=this;
         menu.addMenuProvider(new MenuProvider() {
             @Override
@@ -74,6 +83,11 @@ private MainActivity instance=this;
                 return false;
             }
         });
+
+
+
+
+
     }
 
 
@@ -95,7 +109,9 @@ private MainActivity instance=this;
                                 String fecha = objeto.getString("fecha");
                                 Facturas factura = new Facturas(descEstado, importeOrdenacion, fecha);
                                 listaFacturas.add(factura);
+
                             }
+                            maxImporte = Double.valueOf(listaFacturas.stream().max(Comparator.comparing(Facturas::getImporteOrdenacion)).get().getImporteOrdenacion());
                             adaptadorFacturas.notifyItemRangeInserted(listaFacturas.size(), 1);
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -171,9 +187,15 @@ private MainActivity instance=this;
                         dialogo.dismiss(); // Cierra el popup
                     }
                 });
+
+
             }
 
 
+
         }
+
+
+
     }
 }
