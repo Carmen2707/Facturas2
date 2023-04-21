@@ -1,5 +1,7 @@
 package com.example.facturas;
 
+import java.util.Date;
+
 public class Facturas {
     private String descEstado;
     private String importeOrdenacion;
@@ -22,4 +24,6 @@ public class Facturas {
     public String getFecha() {
         return fecha;
     }
+
+
 }

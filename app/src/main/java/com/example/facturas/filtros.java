@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -30,7 +31,10 @@ import com.google.android.material.slider.Slider;
 import java.text.BreakIterator;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 public class filtros extends AppCompatActivity {
 Context context=this;
@@ -118,6 +122,66 @@ private Activity activity_filtros = this;
                         return true;
                 }
                 return false;
+            }
+        });
+//botonAplicar
+        Button botonAplicar=(Button) findViewById(R.id.botonAplicar);
+        CheckBox checkPagadas = findViewById(R.id.checkPagadas);
+        CheckBox checkAnuladas = findViewById(R.id.checkAnuladas);
+        CheckBox checkCuota = findViewById(R.id.checkCuota);
+        CheckBox checkPendientes = findViewById(R.id.checkPendientes);
+        CheckBox checkPlan = findViewById(R.id.checkPlan);
+        Button botonDesde= (Button) findViewById(R.id.fechaDesde);
+        Button botonHasta=(Button) findViewById(R.id.fechaHasta);
+
+        botonAplicar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(activity_filtros,MainActivity.class);
+                intent.putExtra("importe", Double.parseDouble(central.getText().toString()));
+                intent.putExtra("pagada", checkPagadas.isChecked());
+                intent.putExtra("anulada", checkAnuladas.isChecked());
+                intent.putExtra("cuota", checkCuota.isChecked());
+                intent.putExtra("pendientes", checkPendientes.isChecked());
+                intent.putExtra("plan", checkPlan.isChecked());
+                intent.putExtra("fechaDesde", botonDesde.getText().toString());
+                intent.putExtra("fechaHasta", botonHasta.getText().toString());
+
+                startActivity(intent);
+            }
+        });
+
+        //botonEliminarFiltros
+        Button resetFiltrosButton = findViewById(R.id.botonEliminar);
+        resetFiltrosButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                resetFiltros();
+            }
+
+            private void resetFiltros() {
+//Restablecer valores de fecha
+
+                fechaDesde.setText("dia/mes/año");
+
+                fechaHasta.setText("dia/mes/año");
+
+// Restablecer valor de seekBar
+                seekBar.setMax(maxImporte);
+                seekBar.setProgress(maxImporte);
+                central.setText(String.valueOf(maxImporte));
+
+// Restablecer valores de checkboxes
+                CheckBox pagadas = findViewById(R.id.checkPagadas);
+                pagadas.setChecked(false);
+                CheckBox anuladas = findViewById(R.id.checkAnuladas);
+                anuladas.setChecked(false);
+                CheckBox cuotaFija = findViewById(R.id.checkCuota);
+                cuotaFija.setChecked(false);
+                CheckBox pendientesPago = findViewById(R.id.checkPendientes);
+                pendientesPago.setChecked(false);
+                CheckBox planPago = findViewById(R.id.checkPlan);
+                planPago.setChecked(false);
             }
         });
 

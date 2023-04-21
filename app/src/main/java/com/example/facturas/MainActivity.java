@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -33,8 +34,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ArrayList<Facturas> listaFacturas;
@@ -112,11 +117,109 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                             maxImporte = Double.valueOf(listaFacturas.stream().max(Comparator.comparing(Facturas::getImporteOrdenacion)).get().getImporteOrdenacion());
+
+                            Bundle extras = getIntent().getExtras();
+
+                            if (extras != null) {
+                                ArrayList<Facturas> listFiltro = new ArrayList<>();
+
+                                double importeFiltro = getIntent().getDoubleExtra("importe", maxImporte);
+
+                                for (Facturas factura : listaFacturas) {
+                                    if (Double.parseDouble(factura.getImporteOrdenacion()) < importeFiltro) {
+                                        listFiltro.add(factura);
+                                    }
+                                }
+                                //TEXTO SI NO HAY NADA
+                                TextView textView = new TextView(instance);
+                                textView.setText("No hay facturas");
+                                textView.setTextSize(24);
+                                textView.setVisibility(View.INVISIBLE);
+
+                                boolean checkBoxPagadas = getIntent().getBooleanExtra("pagada", false);
+                                boolean checkBoxPagadas2 = getIntent().getBooleanExtra("pendientePago", false);
+                                boolean checkBoxPagadas3 = getIntent().getBooleanExtra("anulada", false);
+                                boolean checkBoxPagadas4 = getIntent().getBooleanExtra("cuotaFija", false);
+                                boolean checkBoxPagadas5 = getIntent().getBooleanExtra("planPago", false);
+                                //checkbox
+                                ArrayList<Facturas> listFiltro2 = new ArrayList<>();
+
+                                for (Facturas factura : listFiltro) {
+                                    if (factura.getDescEstado().equals("Pagada") && checkBoxPagadas) {
+                                        listFiltro2.add(factura);
+                                    }
+                                    if (factura.getDescEstado().equals("Pendiente de pago") && checkBoxPagadas2) {
+                                        listFiltro2.add(factura);
+                                    }
+                                    if (factura.getDescEstado().equals("Anuladas") && checkBoxPagadas3) {
+                                        listFiltro2.add(factura);
+                                    }
+                                    if (factura.getDescEstado().equals("cuotaFija") && checkBoxPagadas4) {
+                                        listFiltro2.add(factura);
+                                    }
+                                    if (factura.getDescEstado().equals("planPago") && checkBoxPagadas5) {
+                                        listFiltro2.add(factura);
+                                    }
+                                }
+                                if (listFiltro2.isEmpty()) {
+                                    listaFacturas = (ArrayList<Facturas>) listFiltro;
+                                } else {
+                                    listaFacturas = (ArrayList<Facturas>) listFiltro2;
+                                }
+
+                                if (listFiltro.isEmpty() && listFiltro2.isEmpty()) {
+                                    textView.setVisibility(View.VISIBLE);
+                                    RelativeLayout relativeLayout = new RelativeLayout(instance);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                                    relativeLayout.addView(textView, params);
+                                    setContentView(relativeLayout);
+                                }
+
+                                if (!getIntent().getStringExtra("fechaDesde").equals("dia/mes/año") && !getIntent().getStringExtra("fechaHasta").equals("dia/mes/año")) {
+                                    ArrayList<Facturas> facturasFiltradas = new ArrayList<>();
+
+
+                                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyyy");
+                                    Date fechaDesde = null;
+                                    Date fechaHasta = null;
+
+                                    try {
+                                        fechaDesde = sdf.parse(getIntent().getStringExtra("fechaDesde"));
+                                        fechaHasta = sdf.parse(getIntent().getStringExtra("fechaHasta"));
+
+                                    } catch (ParseException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                    for (Facturas factura : listaFacturas) {
+                                        Date fechaFactura = sdf.parse(factura.getFecha());
+                                        if (fechaFactura.after(fechaDesde) && fechaFactura.before(fechaHasta)) {
+                                            facturasFiltradas.add(factura);
+                                        }
+                                    }
+                                    listaFacturas = facturasFiltradas;
+                                }
+
+                            }
+
+
+
+
+
+
+
+
+
+
                             adaptadorFacturas.notifyItemRangeInserted(listaFacturas.size(), 1);
-                        } catch (JSONException e) {
+                        } catch (JSONException | ParseException e) {
                             e.printStackTrace();
                         }
-
                     }
                 },
                 new Response.ErrorListener() {
@@ -172,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-
+//popup
             @Override
             public void onClick(View view) {
                 dialogo.setContentView(R.layout.layout_popup);
