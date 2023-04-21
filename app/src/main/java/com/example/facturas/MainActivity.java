@@ -139,44 +139,32 @@ public class MainActivity extends AppCompatActivity {
                                 boolean checkBoxPagadas = getIntent().getBooleanExtra("pagada", false);
                                 boolean checkBoxPagadas2 = getIntent().getBooleanExtra("pendientePago", false);
                                 boolean checkBoxPagadas3 = getIntent().getBooleanExtra("anulada", false);
-                                boolean checkBoxPagadas4 = getIntent().getBooleanExtra("cuotaFija", false);
+                                boolean checkBoxPagadas4 = getIntent().getBooleanExtra("cuota", false);
                                 boolean checkBoxPagadas5 = getIntent().getBooleanExtra("planPago", false);
                                 //checkbox
-                                ArrayList<Facturas> listFiltro2 = new ArrayList<>();
 
-                                for (Facturas factura : listFiltro) {
-                                    if (factura.getDescEstado().equals("Pagada") && checkBoxPagadas) {
-                                        listFiltro2.add(factura);
-                                    }
-                                    if (factura.getDescEstado().equals("Pendiente de pago") && checkBoxPagadas2) {
-                                        listFiltro2.add(factura);
-                                    }
-                                    if (factura.getDescEstado().equals("Anuladas") && checkBoxPagadas3) {
-                                        listFiltro2.add(factura);
-                                    }
-                                    if (factura.getDescEstado().equals("cuotaFija") && checkBoxPagadas4) {
-                                        listFiltro2.add(factura);
-                                    }
-                                    if (factura.getDescEstado().equals("planPago") && checkBoxPagadas5) {
-                                        listFiltro2.add(factura);
-                                    }
-                                }
-                                if (listFiltro2.isEmpty()) {
-                                    listaFacturas = (ArrayList<Facturas>) listFiltro;
-                                } else {
-                                    listaFacturas = (ArrayList<Facturas>) listFiltro2;
-                                }
+                                if (checkBoxPagadas || checkBoxPagadas2 || checkBoxPagadas3 || checkBoxPagadas4 || checkBoxPagadas5) {
+                                    ArrayList<Facturas> listFiltro2 = new ArrayList<>();
 
-                                if (listFiltro.isEmpty() && listFiltro2.isEmpty()) {
-                                    textView.setVisibility(View.VISIBLE);
-                                    RelativeLayout relativeLayout = new RelativeLayout(instance);
-                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                            RelativeLayout.LayoutParams.WRAP_CONTENT,
-                                            RelativeLayout.LayoutParams.WRAP_CONTENT
-                                    );
-                                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
-                                    relativeLayout.addView(textView, params);
-                                    setContentView(relativeLayout);
+                                    for (Facturas factura : listFiltro) {
+                                        if (factura.getDescEstado().equals("Pagada") && checkBoxPagadas) {
+                                            listFiltro2.add(factura);
+                                        }
+                                        if (factura.getDescEstado().equals("Pendiente de pago") && checkBoxPagadas2) {
+                                            listFiltro2.add(factura);
+                                        }
+                                        if (factura.getDescEstado().equals("Anuladas") && checkBoxPagadas3) {
+                                            listFiltro2.add(factura);
+                                        }
+                                        if (factura.getDescEstado().equals("Cuota Fija") && checkBoxPagadas4) {
+                                            listFiltro2.add(factura);
+                                        }
+                                        if (factura.getDescEstado().equals("Plan de pago") && checkBoxPagadas5) {
+                                            listFiltro2.add(factura);
+                                        }
+                                    }
+
+                                    listFiltro = listFiltro2;
                                 }
 
                                 if (!getIntent().getStringExtra("fechaDesde").equals("dia/mes/año") && !getIntent().getStringExtra("fechaHasta").equals("dia/mes/año")) {
@@ -195,26 +183,30 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-
-                                    for (Facturas factura : listaFacturas) {
+                                    for (Facturas factura : listFiltro) {
                                         Date fechaFactura = sdf.parse(factura.getFecha());
                                         if (fechaFactura.after(fechaDesde) && fechaFactura.before(fechaHasta)) {
                                             facturasFiltradas.add(factura);
                                         }
                                     }
-                                    listaFacturas = facturasFiltradas;
+
+                                    listFiltro = facturasFiltradas;
                                 }
 
+                                listaFacturas = listFiltro;
+
+                                if (listaFacturas.isEmpty()) {
+                                    textView.setVisibility(View.VISIBLE);
+                                    RelativeLayout relativeLayout = new RelativeLayout(instance);
+                                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT,
+                                            RelativeLayout.LayoutParams.WRAP_CONTENT
+                                    );
+                                    params.addRule(RelativeLayout.CENTER_IN_PARENT);
+                                    relativeLayout.addView(textView, params);
+                                    setContentView(relativeLayout);
+                                }
                             }
-
-
-
-
-
-
-
-
-
 
                             adaptadorFacturas.notifyItemRangeInserted(listaFacturas.size(), 1);
                         } catch (JSONException | ParseException e) {
