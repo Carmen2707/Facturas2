@@ -136,11 +136,11 @@ public class MainActivity extends AppCompatActivity {
                                 textView.setTextSize(24);
                                 textView.setVisibility(View.INVISIBLE);
 
-                                boolean checkBoxPagadas = getIntent().getBooleanExtra("pagada", false);
-                                boolean checkBoxPagadas2 = getIntent().getBooleanExtra("pendientePago", false);
-                                boolean checkBoxPagadas3 = getIntent().getBooleanExtra("anulada", false);
-                                boolean checkBoxPagadas4 = getIntent().getBooleanExtra("cuota", false);
-                                boolean checkBoxPagadas5 = getIntent().getBooleanExtra("planPago", false);
+                                boolean checkBoxPagadas = getIntent().getBooleanExtra("Pagada", false);
+                                boolean checkBoxPagadas2 = getIntent().getBooleanExtra("Pendiente de pago", false);
+                                boolean checkBoxPagadas3 = getIntent().getBooleanExtra("Anulada", false);
+                                boolean checkBoxPagadas4 = getIntent().getBooleanExtra("Cuota Fija", false);
+                                boolean checkBoxPagadas5 = getIntent().getBooleanExtra("Plan de pago", false);
                                 //checkbox
 
                                 if (checkBoxPagadas || checkBoxPagadas2 || checkBoxPagadas3 || checkBoxPagadas4 || checkBoxPagadas5) {
@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                                         if (factura.getDescEstado().equals("Pendiente de pago") && checkBoxPagadas2) {
                                             listFiltro2.add(factura);
                                         }
-                                        if (factura.getDescEstado().equals("Anuladas") && checkBoxPagadas3) {
+                                        if (factura.getDescEstado().equals("Anulada") && checkBoxPagadas3) {
                                             listFiltro2.add(factura);
                                         }
                                         if (factura.getDescEstado().equals("Cuota Fija") && checkBoxPagadas4) {

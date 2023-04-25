@@ -49,6 +49,8 @@ private Activity activity_filtros = this;
         Button fechaDesde = (Button) findViewById(R.id.fechaDesde);
         Button fechaHasta= (Button) findViewById(R.id.fechaHasta);
 
+        filtros.this.setTitle("Filtros");
+
         fechaDesde.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,11 +141,11 @@ private Activity activity_filtros = this;
             public void onClick(View view) {
                 Intent intent=new Intent(activity_filtros,MainActivity.class);
                 intent.putExtra("importe", Double.parseDouble(central.getText().toString()));
-                intent.putExtra("pagada", checkPagadas.isChecked());
-                intent.putExtra("anulada", checkAnuladas.isChecked());
-                intent.putExtra("cuota", checkCuota.isChecked());
-                intent.putExtra("pendientes", checkPendientes.isChecked());
-                intent.putExtra("plan", checkPlan.isChecked());
+                intent.putExtra("Pagada", checkPagadas.isChecked());
+                intent.putExtra("Anulada", checkAnuladas.isChecked());
+                intent.putExtra("Cuota Fija", checkCuota.isChecked());
+                intent.putExtra("Pendiente de pago", checkPendientes.isChecked());
+                intent.putExtra("Plan de pago", checkPlan.isChecked());
                 intent.putExtra("fechaDesde", botonDesde.getText().toString());
                 intent.putExtra("fechaHasta", botonHasta.getText().toString());
 
@@ -172,19 +174,17 @@ private Activity activity_filtros = this;
                 central.setText(String.valueOf(maxImporte));
 
 // Restablecer valores de checkboxes
-                CheckBox pagadas = findViewById(R.id.checkPagadas);
-                pagadas.setChecked(false);
-                CheckBox anuladas = findViewById(R.id.checkAnuladas);
-                anuladas.setChecked(false);
-                CheckBox cuotaFija = findViewById(R.id.checkCuota);
-                cuotaFija.setChecked(false);
-                CheckBox pendientesPago = findViewById(R.id.checkPendientes);
-                pendientesPago.setChecked(false);
-                CheckBox planPago = findViewById(R.id.checkPlan);
-                planPago.setChecked(false);
+                CheckBox pagada = findViewById(R.id.checkPagadas);
+                pagada.setChecked(false);
+                CheckBox anulada = findViewById(R.id.checkAnuladas);
+                anulada.setChecked(false);
+                CheckBox cuota = findViewById(R.id.checkCuota);
+                cuota.setChecked(false);
+                CheckBox pendientes = findViewById(R.id.checkPendientes);
+                pendientes.setChecked(false);
+                CheckBox plan = findViewById(R.id.checkPlan);
+                plan.setChecked(false);
             }
         });
 
-    }
-
-}
+}}
